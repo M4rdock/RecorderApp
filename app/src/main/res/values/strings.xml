@@ -3,9 +3,11 @@
     <string name="delete">Delete</string>
     <string name="Share">Share</string>
     <string name="Record">Record</string>
+    <string name="StopRec">Stop</string>
     <string name="List">List</string>
     <string name="MyAudioApp">MyAudioApp\n\n"un'applicazione che permette la registrazione\ne la condivisione di memo vocali</string>
     <string name="timerNumber">00:00:00</string>
     <string name="recordingName">recordingName</string>
     <string name="playListBTN">Play</string>
+    <string name ="description_for_image_button">descrizione</string>
 </resources>

@@ -10,41 +10,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="0dp">  <!-- Colore nero -->
+        tools:layout_editor_absoluteY="0dp">
 
-        <!-- Altri elementi UI qui -->
-
-        <Button
-            android:id="@+id/sharebtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="34dp"
-            android:layout_marginBottom="30dp"
-            android:layout_toEndOf="@+id/deletebtn"
-            android:text="@string/Share" />
-
-        <Button
-            android:id="@+id/deletebtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="35dp"
-            android:layout_marginBottom="30dp"
-            android:text="@string/delete" />
-
-        <Button
-            android:id="@+id/listbtn"
-            android:layout_width="96dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="34dp"
-            android:layout_marginBottom="30dp"
-            android:layout_toEndOf="@+id/sharebtn"
-            android:text="@string/List" />
 
         <TextView
             android:id="@+id/textView"
@@ -60,10 +29,71 @@
             android:layout_marginBottom="513dp"
             android:text="@string/MyAudioApp"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="24sp" />
 
+        <!-- Altri elementi UI qui -->
+
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/deleteBtn"
+                android:src="@drawable/ic_delete"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:background="@drawable/backgroundbtn"
+                android:contentDescription="@string/description_for_image_button"/>
+
+            <ImageButton
+                android:id="@+id/recBtn"
+                android:src="@drawable/ic_record"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/backgroundbtn"
+                android:contentDescription="@string/description_for_image_button"/>
+
+            <ImageButton
+                android:id="@+id/pauseBtn"
+                android:src="@drawable/ic_pause"
+                android:visibility="gone"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/backgroundbtnpause"
+                android:contentDescription="@string/description_for_image_button"/>
+
+            <ImageButton
+                android:id="@+id/listBtn"
+                android:src="@drawable/ic_list"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:background="@drawable/backgroundbtn"
+                android:contentDescription="@string/description_for_image_button"/>
+
+            <ImageButton
+                android:id="@+id/saveBtn"
+                android:src="@drawable/ic_done"
+                android:visibility="gone"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:background="@drawable/backgroundbtn"
+                android:contentDescription="@string/description_for_image_button"/>
+
+            <!-- aggiunto contentDescription per risolvere errore "non speakable text" -->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="611dp"
             android:gravity="center"
@@ -74,17 +104,12 @@
                 android:id="@+id/timerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/timerNumber"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/recordbtn"
-                android:layout_width="200dp"
-                android:layout_height="62dp"
-                android:text="@string/Record" />
 
         </LinearLayout>
 

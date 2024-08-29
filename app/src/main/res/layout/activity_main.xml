@@ -47,6 +47,7 @@
             <ImageButton
                 android:id="@+id/deleteBtn"
                 android:src="@drawable/ic_delete"
+                android:visibility="gone"
                 android:layout_width="@dimen/btn_size"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/backgroundbtn"
@@ -54,7 +55,7 @@
 
             <ImageButton
                 android:id="@+id/recBtn"
-                android:src="@drawable/ic_record"
+                android:src="@drawable/ic_rrecord"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_marginStart="20dp"
@@ -64,12 +65,14 @@
 
             <ImageButton
                 android:id="@+id/pauseBtn"
-                android:src="@drawable/ic_pause"
+                android:src="@drawable/ic_pausa"
                 android:visibility="gone"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@drawable/backgroundbtnpause"
                 android:contentDescription="@string/description_for_image_button"/>
+
+            <!-- android:background="@drawable/backgroundbtnpause" -->
 
             <ImageButton
                 android:id="@+id/listBtn"
@@ -80,7 +83,7 @@
                 android:contentDescription="@string/description_for_image_button"/>
 
             <ImageButton
-                android:id="@+id/saveBtn"
+                android:id="@+id/doneBtn"
                 android:src="@drawable/ic_done"
                 android:visibility="gone"
                 android:layout_width="@dimen/btn_size"

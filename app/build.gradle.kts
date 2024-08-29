@@ -43,6 +43,7 @@ dependencies {
 
 
     val kotlin_version: String by project
+
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

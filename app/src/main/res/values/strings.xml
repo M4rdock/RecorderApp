@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RecorderApp</string>
+    <string name="app_name">MyAudio</string>
     <string name="delete">Delete</string>
     <string name="Share">Share</string>
     <string name="Record">Record</string>

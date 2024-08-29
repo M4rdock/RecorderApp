@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
+import androidx.room.Room
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -47,6 +48,10 @@ class MainActivity : AppCompatActivity() {
     private var inPause= false
 
     private lateinit var stopwatch : StopWatch
+    private lateinit var dataB: AppDatabase //variabile dichiaerata per Db
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +62,14 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        //connessione con il Db
+        dataB = Room.databaseBuilder(
+            this,
+            AppDatabase::class.java,
+            "recorderApp"
+        ).build()
+
 
         startRecordingButton = findViewById(R.id.recBtn)
         stopRecordingButton = findViewById(R.id.pauseBtn)

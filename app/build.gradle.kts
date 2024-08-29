@@ -71,6 +71,7 @@ dependencies {
     //implementation(libs.material.v1100)
 
     implementation(libs.androidx.room.runtime)
+
     //implementation(libs.androidx.room.ktx)
 
     //ho commentato perchè potrebbe esserci un errore con queste implementazioni

@@ -69,10 +69,8 @@
                 android:visibility="gone"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/backgroundbtnpause"
                 android:contentDescription="@string/description_for_image_button"/>
 
-            <!-- android:background="@drawable/backgroundbtnpause" -->
 
             <ImageButton
                 android:id="@+id/listBtn"

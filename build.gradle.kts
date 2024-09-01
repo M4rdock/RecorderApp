@@ -5,14 +5,16 @@ plugins {
 }
 
 buildscript {
-    val kotlin_version by extra("1.5.21") // Sostituisci con la versione desiderata
+    val kotlinVersion by extra("1.9.10") // Versione aggiornata di Kotlin
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath(libs.gradle)
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("com.android.tools.build:gradle:8.1.0")  // Versione aggiornata del plugin Android Gradle
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
+
+
 

@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Build
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -21,6 +23,8 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import androidx.room.Room
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         dataB = Room.databaseBuilder(
             this,
             AppDatabase::class.java,
-            "recorderApp"
+            "registration"
         ).build()
 
 
@@ -96,14 +100,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         listButton.setOnClickListener{
-            //todo
+
+            startActivity(Intent(this , ShowList::class.java))
+
         }
 
         deleteButton.setOnClickListener{
             stopRec()
             val file = File("$dirPath$fileName.mp3")
             file.delete()
-            //todo
             Toast.makeText(this, "file cancellato", Toast.LENGTH_SHORT).show()
 
         }
@@ -166,6 +171,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         dirPath= "${externalCacheDir?.absolutePath}"
+        //dirPath = "${getExternalFilesDir(Environment.DIRECTORY_MUSIC)?.absolutePath}"
 
         val SimpleDateFormat = SimpleDateFormat("yyyy.MM.DD_HH.mm")
         val data = SimpleDateFormat.format(Date())
@@ -207,6 +213,7 @@ class MainActivity : AppCompatActivity() {
         val fileNameET : EditText = bottomSheetView.findViewById(R.id.editTextFileName)
         fileNameET.setText(fileName)
 
+
         // Imposta il listener per il pulsante "Conferma"
         val confirmButton: Button = bottomSheetView.findViewById(R.id.buttonConfirm)
         confirmButton.setOnClickListener {
@@ -214,8 +221,18 @@ class MainActivity : AppCompatActivity() {
             //funzione per rinominare
             val newName = fileNameET.text.toString()
             if (newName != fileNameET.toString()){
-                var newFile =File("$dirPath$newName.mp3")
-                File("$dirPath$fileName.mp3").renameTo(newFile)
+                val newFile =File("$dirPath$newName.mp3")
+                File("$dirPath$fileName.mp3").renameTo(newFile)}
+
+            val filePath ="$dirPath$newName.mp3"
+            val timestamp = Date().time
+            val duration = stopwatch.getElapsedTime()
+
+            val registrazione = RecorderApp(newName, filePath, timestamp, duration)
+
+            //per non usare troppe risorse
+            GlobalScope.launch{
+                dataB.RecorderAppDAO().insert(registrazione)
             }
 
             bottomSheetDialog.dismiss() // Chiudi il Bottom Sheet
@@ -232,7 +249,6 @@ class MainActivity : AppCompatActivity() {
         bottomSheetDialog.setContentView(bottomSheetView)
         bottomSheetDialog.show()
     }
-
 
 
 

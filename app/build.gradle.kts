@@ -44,7 +44,7 @@ dependencies {
 
     val kotlin_version: String by project
 
-    implementation(libs.kotlin.stdlib)
+    //implementation(libs.kotlin.stdlib) revisiona
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -56,6 +56,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
@@ -70,7 +74,7 @@ dependencies {
 
     //implementation(libs.material.v1100)
 
-    implementation(libs.androidx.room.runtime)
+    //implementation(libs.androidx.room.runtime) revisona
 
     //implementation(libs.androidx.room.ktx)
 

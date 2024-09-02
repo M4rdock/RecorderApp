@@ -202,8 +202,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     private fun showSavesheet() {
         // Crea il Bottom Sheet Dialog
         val bottomSheetDialog = BottomSheetDialog(this)
@@ -235,7 +233,7 @@ class MainActivity : AppCompatActivity() {
                 dataB.RecorderAppDAO().insert(registrazione)
             }
 
-            bottomSheetDialog.dismiss() // Chiudi il Bottom Sheet
+            bottomSheetDialog.dismiss()
         }
 
         // Imposta il listener per il pulsante "Elimina"

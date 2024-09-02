@@ -221,43 +221,13 @@ class ShowList : AppCompatActivity(), ClickListener {
             dialog.show()
         }
 
-        //sharebtn.setOnClickListener{
-       //     val selectedRecordings = recorderApp.filter { it.isChecked }
-       //     if (selectedRecordings.size == 1) {
-       //         val recording = selectedRecordings[0]
-       //         shareFile(recording.filePath)
-       //         leaveEditMode()
-       //     } else {
-       //         Toast.makeText(this, "Seleziona un solo file per condividerlo", Toast.LENGTH_SHORT).show()
-       //     }
-       // }
-
-
         sharebtn.setOnClickListener {
             shareSelectedVoiceMemos()
         }
 
 
-
-
     }
 
-    private fun shareFile(filePath: String) {
-        val fileUri = FileProvider.getUriForFile(
-            this,
-            "${packageName}.fileprovider",
-            File(filePath)
-        )
-
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, fileUri)
-            type = "audio/*"
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        startActivity(Intent.createChooser(shareIntent, "Condividi file audio"))
-    }
 
     private fun leaveEditMode(){
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

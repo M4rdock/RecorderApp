@@ -1,6 +1,8 @@
 package com.rkoma.recorderapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,27 +12,27 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import androidx.room.RoomSQLiteQuery
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.sidesheet.SideSheetBehavior
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+
 
 class ShowList : AppCompatActivity(), ClickListener {
 
@@ -65,6 +67,8 @@ class ShowList : AppCompatActivity(), ClickListener {
     private var allChecked = false
 
 
+    @OptIn(DelicateCoroutinesApi::class)
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -110,7 +114,7 @@ class ShowList : AppCompatActivity(), ClickListener {
         thelper = Helper(recorderApp, this)
 
         // Inizializzazione del RecyclerView e configurazione dell'adapter e del layout manager
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView = findViewById(R.id.recyclerView)
         recyclerView.adapter= thelper
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -125,7 +129,7 @@ class ShowList : AppCompatActivity(), ClickListener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                var query = s.toString()
+                val query = s.toString()
                 searchDatabase(query)
 
             }
@@ -170,7 +174,7 @@ class ShowList : AppCompatActivity(), ClickListener {
                     datab.RecorderAppDAO().delete(delet)
 
                     runOnUiThread{
-                        recorderApp.removeAll(delet)
+                        recorderApp.removeAll(delet.toSet())
                         thelper.notifyDataSetChanged()
                         leaveEditMode()
                     }
@@ -190,7 +194,7 @@ class ShowList : AppCompatActivity(), ClickListener {
             alert.setView(dialogView)
             val dialog = alert.create()
 
-            val record = recorderApp.filter { it.isChecked }.get(0)
+            val record = recorderApp.filter { it.isChecked }[0]
             val textInput = dialogView.findViewById<TextInputEditText>(R.id.editTextFileName)
 
             textInput.setText(record.filename)
@@ -258,11 +262,15 @@ class ShowList : AppCompatActivity(), ClickListener {
 
     }
 
+
+
     private fun enableShare(){
         sharebtn.visibility=View.VISIBLE
         sharebtn.isClickable= true
         condividi.setTextColor(ContextCompat.getColor(this, R.color.black))
-
+        sharebtn.setOnClickListener {
+            shareSelectedVoiceMemos()
+        }
     }
 
     private fun enableEdit(){
@@ -280,6 +288,7 @@ class ShowList : AppCompatActivity(), ClickListener {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun searchDatabase(query: String) {
         lifecycleScope.launch {
             // Usa il dispatcher IO per l'accesso al database
@@ -297,6 +306,7 @@ class ShowList : AppCompatActivity(), ClickListener {
     }
 
     // Funzione per caricare i dati dal database
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadData() {
         lifecycleScope.launch {
             // Usa il dispatcher IO per l'accesso al database
@@ -312,6 +322,9 @@ class ShowList : AppCompatActivity(), ClickListener {
         }
     }
 
+    override val filePath: String
+        get() = TODO("Not yet implemented")
+
     override fun clicklistener(position: Int) {
         val recording = recorderApp[position]
 
@@ -319,7 +332,7 @@ class ShowList : AppCompatActivity(), ClickListener {
             recorderApp[position].isChecked = !recorderApp[position].isChecked
             thelper.notifyItemChanged(position)
 
-            var selected = recorderApp.count{it.isChecked}
+            val selected = recorderApp.count{it.isChecked}
             when(selected){
                 0 -> {
                     disableEdit()
@@ -377,6 +390,47 @@ class ShowList : AppCompatActivity(), ClickListener {
 
         }
     }
+
+    private fun shareSelectedVoiceMemos() {
+        // Filtra i memo vocali selezionati
+        val selectedMemos = recorderApp.filter { it.isChecked }
+
+        if (selectedMemos.isEmpty()) {
+            Toast.makeText(this, "Seleziona almeno un memo da condividere", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Lista per contenere gli URI dei file
+        val filesToShare = ArrayList<Uri>()
+
+        selectedMemos.forEach { memo ->
+            val file = File(memo.filePath)
+            if (file.exists()) {
+                // Ottieni l'Uri sicuro per il file utilizzando FileProvider
+                val fileUri = FileProvider.getUriForFile(
+                    this,
+                    "com.rkoma.recorderapp.fileprovider",  // Assicurati che questo nome di provider corrisponda a quello definito nel tuo Manifest
+                    file
+                )
+                filesToShare.add(fileUri)
+            }
+        }
+
+        if (filesToShare.isNotEmpty()) {
+            // Crea l'Intent di condivisione
+            val shareIntent = Intent(Intent.ACTION_SEND_MULTIPLE)
+            shareIntent.type = "audio/*"
+            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare)
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            // Avvia l'Intent di condivisione
+            startActivity(Intent.createChooser(shareIntent, "Condividi memo vocale tramite"))
+        } else {
+            Toast.makeText(this, "Nessun file disponibile per la condivisione", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 }
 
 

@@ -52,7 +52,8 @@ class StopWatch(private val Time: TextView){
         }
     }
 
-    // Ottiene il tempo trascorso in formato mm:ss
+    // Ottiene il tempo trascorso nel formato stabilito
+
     fun getElapsedTimeString(): String {
         val totalSeconds = getElapsedTime() / 1000
         val millisecond= getElapsedTime() % 1000

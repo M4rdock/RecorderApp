@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Build
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -19,7 +18,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import androidx.room.Room
@@ -28,7 +26,6 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.concurrent.fixedRateTimer
 
 const val REQUEST_CODE = 200
 class MainActivity : AppCompatActivity() {
@@ -171,7 +168,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         dirPath= "${externalCacheDir?.absolutePath}"
-        //dirPath = "${getExternalFilesDir(Environment.DIRECTORY_MUSIC)?.absolutePath}"
 
         val SimpleDateFormat = SimpleDateFormat("yyyy.MM.DD_HH.mm")
         val data = SimpleDateFormat.format(Date())
@@ -192,7 +188,7 @@ class MainActivity : AppCompatActivity() {
         inRec=true
         inPause=false
 
-        //facciamo partire il timer
+
         stopwatch.startSw()
 
         deleteButton.visibility = View.VISIBLE

@@ -39,7 +39,8 @@
                     android:id="@+id/closebtn"
                     android:background="@drawable/ic_close"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo" />
 
                 <ImageButton
                     android:id="@+id/selectAll"
@@ -135,7 +136,7 @@
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="rinomina"/>
+                android:text="@string/rinomina"/>
         </LinearLayout>
 
         <LinearLayout
@@ -156,7 +157,7 @@
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="condividi"/>
+                android:text="@string/condividi"/>
         </LinearLayout>
 
     </LinearLayout>

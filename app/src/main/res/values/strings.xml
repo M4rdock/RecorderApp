@@ -10,4 +10,7 @@
     <string name="recordingName">recordingName</string>
     <string name="playListBTN">Play</string>
     <string name="description_for_image_button">descrizione</string>
+    <string name="todo">TODO</string>
+    <string name="condividi">condividi</string>
+    <string name="rinomina">rinomina</string>
 </resources>

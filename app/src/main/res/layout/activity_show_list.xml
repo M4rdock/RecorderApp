@@ -94,6 +94,7 @@
         android:layout_height="wrap_content"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_hideable="true"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:padding="16dp">
 

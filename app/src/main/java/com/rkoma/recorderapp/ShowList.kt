@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -15,6 +16,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class ShowList : AppCompatActivity(), ClickListener {
 
@@ -55,8 +58,6 @@ class ShowList : AppCompatActivity(), ClickListener {
     private lateinit var cancella :  TextView
     private lateinit var rinomina :  TextView
     private lateinit var condividi : TextView
-
-
 
     private lateinit var editbar : View
     private lateinit var closebtn : ImageButton
@@ -114,33 +115,28 @@ class ShowList : AppCompatActivity(), ClickListener {
         recyclerView.adapter= thelper
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-
         // Avvio del caricamento dei dati in modo asincrono usando Coroutine
         loadData()
 
         searchFile = findViewById(R.id.searchbar)
         searchFile.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                var query = s.toString()
+                val query = s.toString()
                 searchDatabase(query)
 
             }
 
-            override fun afterTextChanged(s: Editable?) {
-
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
 
-        closebtn.setOnClickListener(){
+        closebtn.setOnClickListener{
             leaveEditMode()
 
         }
 
-        selectAllbtn.setOnClickListener(){
+        selectAllbtn.setOnClickListener{
             allChecked = !allChecked
             recorderApp.map {it.isChecked = allChecked }
             thelper.notifyDataSetChanged()
@@ -184,16 +180,17 @@ class ShowList : AppCompatActivity(), ClickListener {
             dialog.show()
         }
 
-        rinomina.setOnClickListener{
+        editbtn.setOnClickListener{
             val alert = AlertDialog.Builder(this)
             val dialogView = this.layoutInflater.inflate(R.layout.edit_sheet, null)
             alert.setView(dialogView)
             val dialog = alert.create()
 
             val record = recorderApp.filter { it.isChecked }.get(0)
-            val textInput = dialogView.findViewById<TextInputEditText>(R.id.editTextFileName)
 
+            val textInput : EditText = dialogView.findViewById(R.id.editTextFileName)
             textInput.setText(record.filename)
+            
 
             dialogView.findViewById<Button>(R.id.buttonConfirm).setOnClickListener{
                 val input = textInput.text.toString()
@@ -206,6 +203,7 @@ class ShowList : AppCompatActivity(), ClickListener {
 
                         runOnUiThread{
                             thelper.notifyItemChanged(recorderApp.indexOf(record))
+                            dialog.dismiss()
                             leaveEditMode()
                         }
                     }
@@ -219,10 +217,37 @@ class ShowList : AppCompatActivity(), ClickListener {
 
             dialog.show()
         }
+        
+        sharebtn.setOnClickListener{
+            val selectedRecordings = recorderApp.filter { it.isChecked }
+            if (selectedRecordings.size == 1) {
+                val recording = selectedRecordings[0]
+                shareFile(recording.filePath)
+                leaveEditMode()
+            } else {
+                Toast.makeText(this, "Seleziona un solo file per condividerlo", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
 
+        
+    }
 
+    private fun shareFile(filePath: String) {
+        val fileUri = FileProvider.getUriForFile(
+            this,
+            "${packageName}.fileprovider",
+            File(filePath)
+        )
 
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, fileUri)
+            type = "audio/*"
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
 
+        startActivity(Intent.createChooser(shareIntent, "Condividi file audio"))
     }
 
     private fun leaveEditMode(){
@@ -319,7 +344,7 @@ class ShowList : AppCompatActivity(), ClickListener {
             recorderApp[position].isChecked = !recorderApp[position].isChecked
             thelper.notifyItemChanged(position)
 
-            var selected = recorderApp.count{it.isChecked}
+            val selected = recorderApp.count{it.isChecked}
             when(selected){
                 0 -> {
                     disableEdit()
@@ -362,7 +387,6 @@ class ShowList : AppCompatActivity(), ClickListener {
 
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
 
 
         if(thelper.isEditMode() && editbar.visibility == View.GONE){
